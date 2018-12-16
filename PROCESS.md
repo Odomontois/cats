@@ -66,6 +66,11 @@ the new version's tags.
 (In the future we may want to create branches for major versions,
 e.g. `v1.x`. For now we don't have these.)
 
+The release will take a few hours to sync to
+[Maven Central](http://search.maven.org/). It's usually better to hold
+off announcing the release until this sync has happened. (Before the
+sync, users may not be able to resolve the new version.)
+
 ### Post-release
 
 After the release occurs, you will need to update the
@@ -82,7 +87,17 @@ to be updated:
 You can get a list of changes between release tags `v0.1.2` and
 `v0.2.0` via `git log v0.1.2..v0.2.0`. Scanning this list of commit
 messages is a good way to get a summary of what happened, although it
-does not account for conversations that occured on Github.
+does not account for conversations that occurred on Github.
+
+Once the relevant documentation changes have been committed, new
+[release notes](https://github.com/typelevel/cats/releases) should be
+added. You can add a release by clicking the "Draft a new release" button
+on that page, or if the relevant release already exists, you can click
+"Edit release".
+
+The website should then be updated via [sbt-microsites](https://47deg.github.io/sbt-microsites/)
+using `sbt docs/publishMicrosite`. 
+Please check the [prerequisites](https://47deg.github.io/sbt-microsites/docs/) of sbt-microsites.
 
 ### Conclusion
 

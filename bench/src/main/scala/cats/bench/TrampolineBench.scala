@@ -6,8 +6,6 @@ import cats._
 import cats.implicits._
 import cats.free.Trampoline
 
-import scala.util.control.TailCalls
-
 @State(Scope.Benchmark)
 class TrampolineBench {
 
@@ -28,8 +26,8 @@ class TrampolineBench {
 
   def trampolineFib(n: Int): Trampoline[Int] =
     if (n < 2) Trampoline.done(n) else for {
-      x <- Trampoline.suspend(trampolineFib(n - 1))
-      y <- Trampoline.suspend(trampolineFib(n - 2))
+      x <- Trampoline.defer(trampolineFib(n - 1))
+      y <- Trampoline.defer(trampolineFib(n - 2))
     } yield x + y
 
   // TailRec[A] only has .flatMap in 2.11.

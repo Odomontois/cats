@@ -2,18 +2,23 @@ package cats
 package laws
 package discipline
 
-import cats.functor.Profunctor
-import org.scalacheck.Arbitrary
-import org.scalacheck.Prop
+import org.scalacheck.{Arbitrary, Cogen, Prop}
 import Prop._
+import cats.arrow.Profunctor
 import org.typelevel.discipline.Laws
 
 trait ProfunctorTests[F[_, _]] extends Laws {
   def laws: ProfunctorLaws[F]
 
-  def profunctor[A: Arbitrary, B: Arbitrary, C: Arbitrary, D: Arbitrary, E: Arbitrary, G: Arbitrary](implicit
+  def profunctor[A: Arbitrary, B: Arbitrary, C: Arbitrary, D: Arbitrary, E: Arbitrary, G: Arbitrary](
+    implicit
     ArbFAB: Arbitrary[F[A, B]],
     ArbFCD: Arbitrary[F[C, D]],
+    CogenA: Cogen[A],
+    CogenB: Cogen[B],
+    CogenC: Cogen[C],
+    CogenD: Cogen[D],
+    CogenE: Cogen[E],
     EqFAB: Eq[F[A, B]],
     EqFAD: Eq[F[A, D]],
     EqFAG: Eq[F[A, G]]
@@ -26,7 +31,8 @@ trait ProfunctorTests[F[_, _]] extends Laws {
       "profunctor lmap identity" -> forAll(laws.profunctorLmapIdentity[A, B] _),
       "profunctor rmap identity" -> forAll(laws.profunctorRmapIdentity[A, B] _),
       "profunctor lmap composition" -> forAll(laws.profunctorLmapComposition[A, B, C, D] _),
-      "profunctor rmap composition" -> forAll(laws.profunctorRmapComposition[A, D, C, B] _))
+      "profunctor rmap composition" -> forAll(laws.profunctorRmapComposition[A, D, C, B] _)
+    )
 }
 
 object ProfunctorTests {
